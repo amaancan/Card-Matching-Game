@@ -20,11 +20,11 @@ struct Card {
     // Didn't put associated emoji since model needs to be UI independent
     var isFaceUp = false
     var isMatched = false
-    var identifier: Int
+    var identifier: Int // ideally want to make this 'private' and make custom Equatable protocol
     
-    static var identifierFactory = 0
+    private static var identifierFactory = 0
     
-    static func getUniqueIdentifier() -> Int {
+    private static func getUniqueIdentifier() -> Int {
         identifierFactory += 1 // can access static vars in static func w/o referring to Card.identifierFactory
         return identifierFactory
     }

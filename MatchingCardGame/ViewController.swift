@@ -11,23 +11,31 @@ import UIKit
 class ViewController: UIViewController {
     
     // BIG GREEN ARROW from my controller --> model: so it can talk to model
-    //  "Hey Concentration Game Model, make a game with 5 pairs of cards, based on what user told me"
+    //  "Hey Concentration Game Model, make a game with x pairs of cards, based on what user told me"
     //  MARK: Q: Concentration is a class since only one game obj, Card is a struct since multiple card obj?
-    lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
     
-    var flipCount = 0 {
+    // Often would want out model to be non-private since you give a model to VC and it displays it. Private because numberOfPairsOfCards in the game is tied to UI. We'd also have to make sth non-private that specifies the # of cardButtons. ?
+    private lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+    
+    // Class and things outside of class can GET it but no one can SET it.
+    var numberOfPairsOfCards: Int {
+        return (cardButtons.count + 1) / 2
+    }
+    
+    private(set) var flipCount = 0 {
         //Property observer which listens for change in the variable —> runs code (update UI displaying the variable)
         didSet {
             flipCountLabel.text = "Flips: \(flipCount)"
         }
     }
     
-    @IBOutlet weak var flipCountLabel: UILabel!
+    //Outlets and Actions are almost always 'private' since internal implementation of controlling UI
+    @IBOutlet private weak var flipCountLabel: UILabel!
     
-    @IBOutlet var cardButtons: [UIButton]! //Outlet collection (connection): an array of that type of UI objs
+    @IBOutlet private var cardButtons: [UIButton]! //Outlet collection (connection): an array of that type of UI objs
     
     //Copying a button (or any UI obj in IB) will also copy over it's connected IBActions and IBOutlets. Be careful! Don't add another IBAction --> 1 button w/ 2 IBAction calls.
-    @IBAction func touchCard(_ sender: UIButton) {
+    @IBAction private func touchCard(_ sender: UIButton) {
         flipCount += 1
         if let cardNumber = cardButtons.index(of: sender) {
             game.chooseCard(at: cardNumber) // instead of flipping here, give that resp to model/game
@@ -37,7 +45,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func updateViewFromModel() {
+    private func updateViewFromModel() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
             let card = game.cards[index]
@@ -54,8 +62,10 @@ class ViewController: UIViewController {
         
     }
     
-    var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎"]
+    // Can't make it 'internal' since we consume this var
+    private var emojiChoices = ["🎃", "🦇", "🍎", "😱", "🙀", "😈", "👻", "🍬"]
     
+    // Can't make it 'internal' since building dictionary on the fly
     var emoji = [Int: String]()
     
     func emoji(for card: Card) -> String {
@@ -66,6 +76,6 @@ class ViewController: UIViewController {
         }
         return emoji[card.identifier] ?? "?" //Nil-coelscing: return this, but if it's nil, return this
     }
-
+    
 }
 

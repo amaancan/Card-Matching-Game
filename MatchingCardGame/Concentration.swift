@@ -9,36 +9,61 @@
 import Foundation
 
 //It's the game logic:
-//  1. holds all the cards
-//  2. which on is currently face up
-//  3. what to do when a card is chosen; called by VC
+//  1. Holds all the cards
+//  2. Knows which card (by it's index) is currently the one and only face up card
+//  3. What to do when a card is chosen; func called by VC when user taps the card button
 //  4. init - set up a new game (list of Cards) given the # of pairs
 
 class Concentration {
     
-    var cards = [Card]()
-    var indexOfOneAndOnlyFaceUpCard: Int?
+    // Outsider like VC can get my cards to display it, but I'm the only one responsible for setting it's properties like isMatched, isFaceUp. Makes it like a 'let' for outsiders.
+    private(set) var cards = [Card]()
     
+    private var indexOfOneAndOnlyFaceUpCard: Int? {
+        get {
+            // Look at all the cards to see if you find only 1 that's face-up, and return it; else return nil
+            var foundFaceUpIndex: Int?
+            for index in cards.indices { // It's a sequence of generic type 'countable range'
+                if cards[index].isFaceUp {
+                    if foundFaceUpIndex == nil {
+                        foundFaceUpIndex = index
+                    } else {
+                        return nil
+                    }
+                }
+            }
+            
+            return foundFaceUpIndex
+        }
+        
+        set {
+            // Turn all cards face-down, except the card at index of newValue
+            for index in cards.indices {
+                cards[index].isFaceUp = (index ==  newValue) //MARK: Note clever use of brackets to contain a value
+            }
+        }
+    }
+    
+    // Fundamental API which VC calls
     func chooseCard(at index: Int) {
-        if !cards[index].isMatched { // Ignore a tapped card that's already been matched
-            // 1. No cards are face up --> flip this tapped card up
-            // 2. 2 Cards are faced up (matching or not matching) --> Flip both cards face down
-            // 3. 1 card is face up --> see if their IDs are equal
-            if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
-                // check if cards match
+        if !cards[index].isMatched { // Ignore a tapped card that's already been matched a.k.a out of the game
+            
+            // THREE POSSIBILE SCENARIOS:
+            // 1. 1 card is face up --> see if their IDs are equal
+            // 2. No cards are face up --> flip this tapped card up
+            // 3. 2 Cards are faced up (matching or not matching) --> Flip both cards face down
+            
+            if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index { // 1) We HAVE only 1 face-up card. And tapped card isn't the same oneAndOnlyFaceUpCard which the user just tapped a few seconds ago.
+                
+                // Check if cards match
                 if cards[matchIndex].identifier == cards[index].identifier {
-                    cards[matchIndex].isMatched = true
-                    cards[index].isMatched = true
+                    cards[matchIndex].isMatched = true // matched: kicked out of game
+                    cards[index].isMatched = true      // matched: kicked out of game
                 }
                 cards[index].isFaceUp = true
-                indexOfOneAndOnlyFaceUpCard = nil    // not one and only ...
             } else {
-                // 2 & 3) either no card or two cards face up
-                for flipdownIndex in cards.indices {
-                    cards[flipdownIndex].isFaceUp = false // flip down every card on the board
-                }
-                cards[index].isFaceUp = true // turn this tapped card face up
-                indexOfOneAndOnlyFaceUpCard = index // this is the index of the card which is face up
+                // 2 & 3) Either no card or 2 cards face-up
+                indexOfOneAndOnlyFaceUpCard = index // calls setter
             }
             
         }
