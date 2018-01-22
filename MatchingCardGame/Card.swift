@@ -15,12 +15,18 @@ import UIKit
 //  4. TYPE ONLY, NOT OBJ - make an ID & hold onto next ID# to be given to next init()
 //  5. init() a Card - call unique ID func from TYPE to use in making obj
 
-struct Card {
+struct Card: Hashable {
+    
+    var hashValue: Int {return identifier} // delegate var. req. for Hashable protocol
+    
+    static func ==(lhs: Card, rhs: Card) -> Bool { // delegate method re. for Equatable protocol
+        return lhs.identifier == rhs.identifier
+    }
     
     // Didn't put associated emoji since model needs to be UI independent
     var isFaceUp = false
     var isMatched = false
-    var identifier: Int // ideally want to make this 'private' and make custom Equatable protocol
+    private var identifier: Int // ideally want to make this 'private' and make custom Equatable protocol
     
     private static var identifierFactory = 0
     

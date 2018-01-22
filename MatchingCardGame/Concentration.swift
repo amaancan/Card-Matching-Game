@@ -14,7 +14,7 @@ import Foundation
 //  3. What to do when a card is chosen; func called by VC when user taps the card button
 //  4. init - set up a new game (list of Cards) given the # of pairs
 
-class Concentration {
+struct Concentration { // Better as struct: don't pass Concentration games around. It just sits in our VC.
     
     // Outsider like VC can get my cards to display it, but I'm the only one responsible for setting it's properties like isMatched, isFaceUp. Makes it like a 'let' for outsiders.
     private(set) var cards = [Card]()
@@ -22,18 +22,21 @@ class Concentration {
     private var indexOfOneAndOnlyFaceUpCard: Int? {
         get {
             // Look at all the cards to see if you find only 1 that's face-up, and return it; else return nil
-            var foundFaceUpIndex: Int?
-            for index in cards.indices { // It's a sequence of generic type 'countable range'
-                if cards[index].isFaceUp {
-                    if foundFaceUpIndex == nil {
-                        foundFaceUpIndex = index
-                    } else {
-                        return nil
-                    }
-                }
-            }
-            
-            return foundFaceUpIndex
+            // card.indicies is a sequence of generic type 'countable range'
+            return cards.indices.filter { cards[$0].isFaceUp }.oneAndOnly
+//            return faceUpCardIndicies.count = 1 ? faceUpCardIndicies.first : nil
+//            var foundFaceUpIndex: Int?
+//            for index in cards.indices {
+//                if cards[index].isFaceUp {
+//                    if foundFaceUpIndex == nil {
+//                        foundFaceUpIndex = index
+//                    } else {
+//                        return nil
+//                    }
+//                }
+//            }
+//
+//            return foundFaceUpIndex
         }
         
         set {
@@ -45,7 +48,9 @@ class Concentration {
     }
     
     // Fundamental API which VC calls
-    func chooseCard(at index: Int) {
+    mutating func chooseCard(at index: Int) {
+        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index)): chosen index not in cards") //protects from negative numbers for ex.
+        
         if !cards[index].isMatched { // Ignore a tapped card that's already been matched a.k.a out of the game
             
             // THREE POSSIBILE SCENARIOS:
@@ -56,7 +61,7 @@ class Concentration {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index { // 1) We HAVE only 1 face-up card. And tapped card isn't the same oneAndOnlyFaceUpCard which the user just tapped a few seconds ago.
                 
                 // Check if cards match
-                if cards[matchIndex].identifier == cards[index].identifier {
+                if cards[matchIndex] == cards[index] {
                     cards[matchIndex].isMatched = true // matched: kicked out of game
                     cards[index].isMatched = true      // matched: kicked out of game
                 }
@@ -67,10 +72,11 @@ class Concentration {
             }
             
         }
-        // Don't do anything when the tapped card has been matched
+        // Don't do anything when the tapped card has been matched is already taken out of the game (can't see in UI)
     }
     
     init(numberOfPairsOfCards: Int) {
+        assert(numberOfPairsOfCards > 0, "Concentration.init(numberOfPairsOfCards: \(numberOfPairsOfCards)): you must have atleast one pair of cards to make a game") // Protects our API against improper use
         for _ in 1...numberOfPairsOfCards { // _ since didn't use the specific element we iterated over, just needed a total # of iterations
             let card = Card() // concentration game doesn't care about making unique ids for cards, just wants cards w/ unique ids --> move to Card
             cards += [card, card] // same as cards.append(card) two times
@@ -79,4 +85,14 @@ class Concentration {
         //    TODO: Shuffle the cards
     }
     
+}
+
+// Looks at all the elements in the Collection calling this computed var. Returns the element if it's the one and only element in the Collection; else return nil.
+extension Collection { // Collection is a generic type
+    var oneAndOnly: Element? {
+        //count & first are Collection methods, so I can use them in the implementation of a Collection var
+        // I think self.count and self.first would also work
+        return count == 1 ? first : nil
+        
+    }
 }

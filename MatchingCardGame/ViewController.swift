@@ -22,15 +22,28 @@ class ViewController: UIViewController {
         return (cardButtons.count + 1) / 2
     }
     
-    private(set) var flipCount = 0 {
+    private(set) var flipCount = 0 { // init of var doesn't trigger didSet
         //Property observer which listens for change in the variable —> runs code (update UI displaying the variable)
         didSet {
-            flipCountLabel.text = "Flips: \(flipCount)"
+            updateFlipCountLabel()
         }
     }
     
+    private func updateFlipCountLabel() {
+        let attributes: [NSAttributedStringKey: Any]? = [
+            .strokeWidth: 5.0,
+            .strokeColor: UIColor.gray
+        ]
+         let attributedString = NSAttributedString(string: "Flips: \(flipCount)", attributes: attributes)
+        flipCountLabel.attributedText = attributedString
+    }
+    
     //Outlets and Actions are almost always 'private' since internal implementation of controlling UI
-    @IBOutlet private weak var flipCountLabel: UILabel!
+    @IBOutlet private weak var flipCountLabel: UILabel! {
+        didSet {
+            updateFlipCountLabel()
+        }
+    }
     
     @IBOutlet private var cardButtons: [UIButton]! //Outlet collection (connection): an array of that type of UI objs
     
@@ -57,25 +70,36 @@ class ViewController: UIViewController {
             } else {
                 button.setTitle("", for: UIControlState.normal)
                 button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
-            }
+            } 
         }
         
     }
     
-    // Can't make it 'internal' since we consume this var
-    private var emojiChoices = ["🎃", "🦇", "🍎", "😱", "🙀", "😈", "👻", "🍬"]
-    
+    // Can't make it 'internal' since we consume this var   
+    private var emojiChoices = "🎃🦇🍎😱🙀😈👻🍬"
+
     // Can't make it 'internal' since building dictionary on the fly
-    var emoji = [Int: String]()
+    var emoji = [Card: String]()
     
     func emoji(for card: Card) -> String {
         // Just in time loading up of emoji dictionary
-        if emoji[card.identifier] == nil, emojiChoices.count > 0 { // Looking sth up in a dictionary returns an optional
-            let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count - 1)))
-            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+        if emoji[card] == nil, emojiChoices.count > 0 { // Looking sth up in a dictionary returns an optional
+            let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4random)
+            emoji[card] = String(emojiChoices.remove(at: randomStringIndex))
         }
-        return emoji[card.identifier] ?? "?" //Nil-coelscing: return this, but if it's nil, return this
+        return emoji[card] ?? "?" //Nil-coelscing: return this, but if it's nil, return this
     }
-    
 }
 
+extension Int {
+    // Returns a random number between 0 and the Int (exsluding the Int) by tapping into this computed var's getter.
+    var arc4random: Int {
+        if self > 0 {
+            return Int(arc4random_uniform(UInt32(self))) //self is for instance not type here
+        } else if self < 0 { // Won't crash if called by a negative Int now.
+            return -Int(arc4random_uniform(UInt32(abs(self))))
+        } else {
+            return 0
+        }
+    }
+}
