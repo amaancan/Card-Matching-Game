@@ -28,7 +28,7 @@
                                         <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="35"/>
                                         <state key="normal" title="Sports"/>
                                         <connections>
-                                            <segue destination="Giz-st-94t" kind="showDetail" identifier="ChooseTheme" id="v7z-Ge-uSa"/>
+                                            <action selector="changeTheme:" destination="bPd-OL-H1V" eventType="touchUpInside" id="okO-2K-na5"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Ag-7L-1Gc">
@@ -36,7 +36,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="Animals"/>
                                         <connections>
-                                            <segue destination="Giz-st-94t" kind="showDetail" identifier="ChooseTheme" id="Bzu-LL-1Xb"/>
+                                            <action selector="changeTheme:" destination="bPd-OL-H1V" eventType="touchUpInside" id="IQH-lm-1lX"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FO1-lm-A0F">
@@ -44,7 +44,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="Food"/>
                                         <connections>
-                                            <segue destination="Giz-st-94t" kind="showDetail" identifier="ChooseTheme" id="BtM-h4-eVE"/>
+                                            <action selector="changeTheme:" destination="bPd-OL-H1V" eventType="touchUpInside" id="Dcs-wT-1yR"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -68,6 +68,9 @@
                         <viewLayoutGuide key="safeArea" id="BtB-jH-UOR"/>
                     </view>
                     <navigationItem key="navigationItem" id="GvP-c9-ugX"/>
+                    <connections>
+                        <segue destination="Giz-st-94t" kind="showDetail" identifier="ChangeTheme" id="4AL-f9-8sC"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i08-5J-SCt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -270,6 +273,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="v7z-Ge-uSa"/>
+        <segue reference="4AL-f9-8sC"/>
     </inferredMetricsTieBreakers>
 </document>
