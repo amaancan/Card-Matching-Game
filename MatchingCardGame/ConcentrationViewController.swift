@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ConcentrationViewController.swift
 //  MatchingCardGame
 //
 //  Created by Amaan on 2018-01-19.
@@ -7,8 +7,9 @@
 //
 
 import UIKit
-
-class ViewController: UIViewController {
+// IB NOTES:
+// 1. Once splitVC added, change segues (masterVC --> detailVC) to 'Show Detail' so it can adapt: do split view style for iPad and navigation style for smaller devices. Note: bug in IB doesn't allow changing segue types so just delete and create new.
+class ConcentrationViewController: UIViewController {
     
     // BIG GREEN ARROW from my controller --> model: so it can talk to model
     //  "Hey Concentration Game Model, make a game with x pairs of cards, based on what user told me"
@@ -52,32 +53,39 @@ class ViewController: UIViewController {
         flipCount += 1
         if let cardNumber = cardButtons.index(of: sender) {
             game.chooseCard(at: cardNumber) // instead of flipping here, give that resp to model/game
-            updateViewFromModel() // tell view to stay in sync with the model/game
+            updateViewFromModel() // tell view to stay in sync with the model/game *** sets theme in UI
         } else {
             print("choosen card was not in cardButtons")
         }
     }
     
     private func updateViewFromModel() {
-        for index in cardButtons.indices {
-            let button = cardButtons[index]
-            let card = game.cards[index]
-            // @ this point I've got the button (UI) and the associated Card model
-            if card.isFaceUp {
-                //MARK: Q: Why use set tile function instead of changing value of title var? Like next line or 20: for label.text = "..."
-                button.setTitle(emoji(for: card), for: UIControlState.normal)
-                button.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            } else {
-                button.setTitle("", for: UIControlState.normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
-            } 
+        if cardButtons != nil { // *** Protect code that can be called when MVC is being prepared for segue. cardButtos outlets are not hooked when prepare(for segue:) is called --> which eventually call this func. Thankfully, can rely on this func being called when someone touchCard(_ sender:), once VC is init.
+            for index in cardButtons.indices {
+                let button = cardButtons[index]
+                let card = game.cards[index]
+                // @ this point I've got the button (UI) and the associated Card model
+                if card.isFaceUp {
+                    //MARK: Q: Why use set tile function instead of changing value of title var? Like next line or 20: for label.text = "..."
+                    button.setTitle(emoji(for: card), for: UIControlState.normal)
+                    button.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                } else {
+                    button.setTitle("", for: UIControlState.normal)
+                    button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+                }
+            }
         }
-        
     }
     
     // Can't make it 'internal' since we consume this var   
     private var emojiChoices = "🎃🦇🍎😱🙀😈👻🍬"
-
+    var theme: String? {
+        didSet {
+            emojiChoices = theme ?? ""
+            emoji = [:] // reset dict to be loaded JIT in emoji(for card:)
+            updateViewFromModel()
+        }
+    }
     // Can't make it 'internal' since building dictionary on the fly
     var emoji = [Card: String]()
     

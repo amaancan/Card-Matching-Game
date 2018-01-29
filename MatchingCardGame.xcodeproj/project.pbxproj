@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		51030F8B201E71FF00A11345 /* ThemesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51030F8A201E71FF00A11345 /* ThemesViewController.swift */; };
 		511E82DA20129C0300347D36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511E82D920129C0300347D36 /* AppDelegate.swift */; };
-		511E82DC20129C0300347D36 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511E82DB20129C0300347D36 /* ViewController.swift */; };
+		511E82DC20129C0300347D36 /* ConcentrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511E82DB20129C0300347D36 /* ConcentrationViewController.swift */; };
 		511E82DF20129C0300347D36 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 511E82DD20129C0300347D36 /* Main.storyboard */; };
 		511E82E120129C0300347D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 511E82E020129C0300347D36 /* Assets.xcassets */; };
 		511E82E420129C0300347D36 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 511E82E220129C0300347D36 /* LaunchScreen.storyboard */; };
@@ -17,9 +18,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		51030F8A201E71FF00A11345 /* ThemesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemesViewController.swift; sourceTree = "<group>"; };
 		511E82D620129C0300347D36 /* MatchingCardGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatchingCardGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		511E82D920129C0300347D36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		511E82DB20129C0300347D36 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		511E82DB20129C0300347D36 /* ConcentrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcentrationViewController.swift; sourceTree = "<group>"; };
 		511E82DE20129C0300347D36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		511E82E020129C0300347D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		511E82E320129C0300347D36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -58,12 +60,13 @@
 		511E82D820129C0300347D36 /* MatchingCardGame */ = {
 			isa = PBXGroup;
 			children = (
-				511E82D920129C0300347D36 /* AppDelegate.swift */,
-				511E82DB20129C0300347D36 /* ViewController.swift */,
+				511E82DD20129C0300347D36 /* Main.storyboard */,
+				51030F8A201E71FF00A11345 /* ThemesViewController.swift */,
+				511E82DB20129C0300347D36 /* ConcentrationViewController.swift */,
 				511E82EB20129D3A00347D36 /* Card.swift */,
 				511E82ED20129DC100347D36 /* Concentration.swift */,
-				511E82DD20129C0300347D36 /* Main.storyboard */,
 				511E82E020129C0300347D36 /* Assets.xcassets */,
+				511E82D920129C0300347D36 /* AppDelegate.swift */,
 				511E82E220129C0300347D36 /* LaunchScreen.storyboard */,
 				511E82E520129C0300347D36 /* Info.plist */,
 			);
@@ -142,10 +145,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				511E82DC20129C0300347D36 /* ViewController.swift in Sources */,
+				511E82DC20129C0300347D36 /* ConcentrationViewController.swift in Sources */,
 				511E82EE20129DC100347D36 /* Concentration.swift in Sources */,
 				511E82EC20129D3A00347D36 /* Card.swift in Sources */,
 				511E82DA20129C0300347D36 /* AppDelegate.swift in Sources */,
+				51030F8B201E71FF00A11345 /* ThemesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
